@@ -1,0 +1,33 @@
+{% extends "network/layout.html" %}
+{% block body %}
+
+<h3>Following</h3>
+
+{% if not following_ids %}
+<p>You are not following anyone.</p>
+{% endif %}
+
+{% for post in page_obj %}
+<div class="card mb-3">
+    <div class="card-body">
+        <a href="{% url 'profile' post.user.id %}" class="font-weight-bold" style="font-size:18px;">
+            {{ post.user.username }}
+        </a>
+        <p class="mt-2">{{ post.body }}</p>
+        <small>{{ post.timestamp }}</small>
+    </div>
+</div>
+{% endfor %}
+
+<nav>
+<ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+</ul>
+</nav>
+
+{% endblock %}

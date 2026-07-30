@@ -1,0 +1,24 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<h1>{{ profile_user.username }}</h1>
+
+{% if user.is_authenticated and user != profile_user %}
+    {% if is_following %}
+        <a href="{% url 'unfollow_user' profile_user.id %}">Unfollow</a>
+    {% else %}
+        <a href="{% url 'follow_user' profile_user.id %}">Follow</a>
+    {% endif %}
+{% endif %}
+
+<h2>Posts</h2>
+
+{% for post in posts %}
+<div>
+    <p>{{ post.body }}</p>
+    <small>{{ post.timestamp }}</small>
+</div>
+{% endfor %}
+
+{% endblock %}

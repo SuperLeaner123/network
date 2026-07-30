@@ -1,0 +1,39 @@
+{% extends "network/layout.html" %}
+{% block body %}
+
+<div class="card p-3 mb-3">
+    <form action="{% url 'create_post' %}" method="POST">
+        {% csrf_token %}
+        <textarea name="body" class="form-control" rows="3" placeholder="Write a post..."></textarea>
+        <button class="btn btn-primary mt-2">Post</button>
+    </form>
+</div>
+
+{% for post in page_obj %}
+<div class="card mb-3">
+    <div class="card-body">
+        <a href="{% url 'profile' post.user.id %}" class="font-weight-bold" style="font-size:18px;">
+            {{ post.user.username }}
+        </a>
+        <p class="mt-2">{{ post.body }}</p>
+        <small>{{ post.timestamp }}</small><br>
+        <a href="{% url 'toggle_like' post.id %}" class="text-danger">{{ post.likes.count }} ❤️</a>
+        {% if user == post.user %}
+        <a href="{% url 'edit_post' post.id %}" class="ml-2 text-primary">Edit</a>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<nav>
+<ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+</ul>
+</nav>
+
+{% endblock %}
