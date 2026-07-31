@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html>
+{% load static %}
 <head>
     <title>Network</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="{% static 'network/main.js' %}"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-dark bg-dark px-3 py-2">
-    <a class="navbar-brand" style="font-size:20px;" href="{% url 'index' %}">Network</a>
+    <a class="navbar-brand" href="{% url 'index' %}">Network</a>
     <ul class="navbar-nav ml-auto flex-row">
         <li class="nav-item mx-2">
-            <a class="nav-link p-0 text-white" href="{% url 'index' %}">All Posts</a>
+            <a class="nav-link text-white" href="{% url 'index' %}">All Posts</a>
         </li>
+
         {% if user.is_authenticated %}
-        <li class="nav-item mx-2">
-            <a class="nav-link p-0 text-white" href="{% url 'following' %}">Following</a>
-        </li>
-        <li class="nav-item mx-2">
-            <a class="nav-link p-0 text-white" href="{% url 'logout' %}">Log Out</a>
-        </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link text-white" href="{% url 'following' %}">Following</a>
+            </li>
+            <li class="nav-item mx-2">
+                <span class="nav-link text-info">{{ user.username }}</span>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link text-white" href="{% url 'logout' %}">Log Out</a>
+            </li>
         {% else %}
-        <li class="nav-item mx-2">
-            <a class="nav-link p-0 text-white" href="{% url 'login' %}">Log In</a>
-        </li>
-        <li class="nav-item mx-2">
-            <a class="nav-link p-0 text-white" href="{% url 'register' %}">Register</a>
-        </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link text-white" href="{% url 'login' %}">Log In</a>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
+            </li>
         {% endif %}
     </ul>
 </nav>

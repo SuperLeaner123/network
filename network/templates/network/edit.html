@@ -5,7 +5,7 @@
 
 <form action="{% url 'edit_post' post.id %}" method="POST">
     {% csrf_token %}
-    <textarea name="body" class="form-control" rows="4">{{ post.body }}</textarea>
+    <textarea name="content" class="form-control" rows="4">{{ post.content }}</textarea>
     <button class="btn btn-primary mt-2">Save</button>
 </form>
 

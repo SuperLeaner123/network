@@ -1,33 +1,58 @@
 {% extends "network/layout.html" %}
+{% load static %}
+
 {% block body %}
 
-<h3>Following</h3>
-
-{% if not following_ids %}
-<p>You are not following anyone.</p>
-{% endif %}
+<h2>Following</h2>
 
 {% for post in page_obj %}
-<div class="card mb-3">
-    <div class="card-body">
-        <a href="{% url 'profile' post.user.id %}" class="font-weight-bold" style="font-size:18px;">
-            {{ post.user.username }}
+    <div class="post-box mb-4">
+
+        <a href="{% url 'profile' post.user.id %}">
+            <strong>{{ post.user.username }}</strong>
         </a>
-        <p class="mt-2">{{ post.body }}</p>
+
+        <p id="content-{{ post.id }}">{{ post.content }}</p>
+
         <small>{{ post.timestamp }}</small>
+
+        <div class="mt-2">
+            <span id="likes-{{ post.id }}">{{ post.likes.count }}</span> likes
+
+            {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-outline-primary"
+                        data-post-id="{{ post.id }}"
+                        onclick="toggleLike(this.dataset.postId)">
+                    Like / Unlike
+                </button>
+            {% endif %}
+        </div>
+
+        {% if user == post.user %}
+            <button class="btn btn-sm btn-outline-secondary mt-2"
+                    data-post-id="{{ post.id }}"
+                    onclick="editPost(this.dataset.postId)">
+                Edit
+            </button>
+        {% endif %}
+
     </div>
-</div>
 {% endfor %}
 
-<nav>
-<ul class="pagination">
+<div class="pagination mt-4">
     {% if page_obj.has_previous %}
-    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        <a class="btn btn-outline-secondary"
+           href="?page={{ page_obj.previous_page_number }}">
+            Previous
+        </a>
     {% endif %}
+
     {% if page_obj.has_next %}
-    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        <a class="btn btn-outline-secondary"
+           href="?page={{ page_obj.next_page_number }}">
+            Next
+        </a>
     {% endif %}
-</ul>
-</nav>
+</div>
 
 {% endblock %}

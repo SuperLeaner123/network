@@ -2,23 +2,73 @@
 
 {% block body %}
 
-<h1>{{ profile_user.username }}</h1>
+<h2>{{ profile_user.username }}</h2>
+
+<p>
+    Followers: {{ followers_count }}<br>
+    Following: {{ following_count }}
+</p>
 
 {% if user.is_authenticated and user != profile_user %}
     {% if is_following %}
-        <a href="{% url 'unfollow_user' profile_user.id %}">Unfollow</a>
+        <form action="{% url 'unfollow_user' profile_user.id %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-danger">Unfollow</button>
+        </form>
     {% else %}
-        <a href="{% url 'follow_user' profile_user.id %}">Follow</a>
+        <form action="{% url 'follow_user' profile_user.id %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-primary">Follow</button>
+        </form>
     {% endif %}
 {% endif %}
 
-<h2>Posts</h2>
+<hr>
 
-{% for post in posts %}
-<div>
-    <p>{{ post.body }}</p>
-    <small>{{ post.timestamp }}</small>
-</div>
+{% for post in page_obj %}
+    <div class="post-box mb-4">
+
+        <p id="content-{{ post.id }}">{{ post.content }}</p>
+
+        <small>{{ post.timestamp }}</small>
+
+        <div class="mt-2">
+            <span id="likes-{{ post.id }}">{{ post.likes.count }}</span> likes
+
+            {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-outline-primary"
+                        data-post-id="{{ post.id }}"
+                        onclick="toggleLike(this.dataset.postId)">
+                    Like / Unlike
+                </button>
+            {% endif %}
+        </div>
+
+        {% if user == post.user %}
+            <button class="btn btn-sm btn-outline-secondary mt-2"
+                    data-post-id="{{ post.id }}"
+                    onclick="editPost(this.dataset.postId)">
+                Edit
+            </button>
+        {% endif %}
+
+    </div>
 {% endfor %}
+
+<div class="pagination mt-4">
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-secondary"
+           href="?page={{ page_obj.previous_page_number }}">
+            Previous
+        </a>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-secondary"
+           href="?page={{ page_obj.next_page_number }}">
+            Next
+        </a>
+    {% endif %}
+</div>
 
 {% endblock %}
